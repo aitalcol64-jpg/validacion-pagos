@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Pago</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f8f9fa; display: flex; justify-content: center; padding: 20px; }
+        .form-container { background: white; padding: 30px; border-radius: 10px; width: 100%; max-width: 450px; color: #4e342e; }
+        
+        label { display: block; margin-top: 20px; font-weight: bold; font-size: 14px; }
+        label span { color: #d32f2f; } /* Para el asterisco rojo */
+        
+        input { width: 100%; padding: 12px; margin-top: 8px; border: 1.5px solid #8d6e63; border-radius: 8px; box-sizing: border-box; background-color: #fffaf0; }
+        
+        .upload-area { border: 2px dashed #8d6e63; border-radius: 10px; padding: 30px; text-align: center; margin-top: 20px; background-color: #fffaf0; }
+        .upload-area img { width: 50px; margin-bottom: 10px; }
+        
+        .buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-save { flex: 1; background: white; border: 1.5px solid #8d6e63; color: #4e342e; padding: 12px; border-radius: 8px; cursor: pointer; }
+        .btn-submit { flex: 1; background: #5d2605; border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        h3 { margin-bottom: 5px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <form action="https://formsubmit.co/TU_CORREO@EMAIL.COM" method="POST" enctype="multipart/form-data">
+        
+        <label>Nit o Cc de aplicación de pago <span>*</span></label>
+        <input type="text" name="nit_cc" required>
+
+        <label>Razon social <span>*</span></label>
+        <input type="text" name="razon_social" required>
+
+        <label>#- celular <span>*</span></label>
+        <input type="text" name="celular" placeholder="e.g., 23" required>
+
+        <label>banco cuenta origen</label>
+        <input type="text" name="banco_origen">
+
+        <label>Valor transferencia <span>*</span></label>
+        <input type="text" name="valor" placeholder="e.g., 23" required>
+        <small style="color: #8d6e63;">$</small>
+
+        <label>Fecha <span>*</span></label>
+        <input type="date" name="fecha" required>
+
+        <label>Soporte de transferencia</label>
+        <div class="upload-area">
+            <div style="font-size: 40px;">☁️</div>
+            <h3>Browse Files</h3>
+            <p>Choose a file</p>
+            <input type="file" name="comprobante" accept="image/*,.pdf" required style="border:none; background:none;">
+        </div>
+
+        <input type="hidden" name="_captcha" value="false">
+
+        <div class="buttons">
+            <button type="button" class="btn-save">Save</button>
+            <button type="submit" class="btn-submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
