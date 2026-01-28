@@ -125,6 +125,11 @@
             background: #e65c00;
         }
 
+        .btn-enviar:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
         .footer {
             text-align: center;
             font-size: 10px;
@@ -170,9 +175,9 @@
         </div>
 
         <div class="upload-box" onclick="document.getElementById('soporte').click()">
-            <strong id="status">ADJUNTAR SOPORTE DE PAGO</strong>
-            <p style="font-size: 11px; color: #999; margin: 5px 0 0;">PDF, JPG o PNG (Máx. 8MB)</p>
-            <input type="file" name="attachment" id="soporte" accept="image/*,.pdf" style="display:none" onchange="fileCheck()">
+            <strong id="status">ADJUNTAR SOPORTES (MÁX. 10)</strong>
+            <p id="info-files" style="font-size: 11px; color: #999; margin: 5px 0 0;">JPG o PNG (Hasta 10 imágenes)</p>
+            <input type="file" name="attachment" id="soporte" accept="image/*" style="display:none" onchange="fileCheck()" multiple>
         </div>
 
         <button type="submit" class="btn-enviar" id="btnMain">Enviar para Validación</button>
@@ -188,13 +193,23 @@
     function fileCheck() {
         const input = document.getElementById('soporte');
         const status = document.getElementById('status');
+        const info = document.getElementById('info-files');
+        
         if (input.files.length > 0) {
-            status.innerText = "✓ ARCHIVO CARGADO: " + input.files[0].name;
-            status.style.color = "#28a745";
+            // CAMBIO: Validación de máximo 10 archivos
+            if (input.files.length > 10) {
+                alert("Atención: Solo puedes subir un máximo de 10 imágenes.");
+                input.value = ""; // Limpiar selección
+                status.innerText = "ADJUNTAR SOPORTES (MÁX. 10)";
+                status.style.color = "#ff6600";
+            } else {
+                status.innerText = "✓ " + input.files.length + " ARCHIVOS SELECCIONADOS";
+                status.style.color = "#28a745";
+                info.innerText = "Soportes listos para enviar";
+            }
         }
     }
 
-    // Función para convertir el archivo a Base64
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -209,20 +224,26 @@
         const form = e.target;
         const fileInput = document.getElementById('soporte');
         
-        btn.innerText = "PROCESANDO SOPORTE...";
+        if (fileInput.files.length === 0) {
+            alert("Por favor, adjunte al menos un soporte de pago.");
+            return;
+        }
+
+        btn.innerText = "PROCESANDO SOPORTES...";
         btn.disabled = true;
 
         let fileBase64 = "";
-        let fileName = "sin_soporte.txt";
+        let fileName = "";
 
-        // Si hay un archivo, lo convertimos
-        if (fileInput.files.length > 0) {
-            try {
-                fileBase64 = await toBase64(fileInput.files[0]);
-                fileName = fileInput.files[0].name;
-            } catch (err) {
-                console.error("Error leyendo archivo", err);
-            }
+        // CAMBIO: Por ahora enviamos la PRIMERA imagen de la lista 
+        // para que sea compatible con tu flujo actual de Power Automate.
+        try {
+            fileBase64 = await toBase64(fileInput.files[0]);
+            fileName = fileInput.files.length > 1 
+                ? "Lote_" + fileInput.files.length + "_" + fileInput.files[0].name 
+                : fileInput.files[0].name;
+        } catch (err) {
+            console.error("Error leyendo archivo", err);
         }
 
         const formData = {
@@ -231,8 +252,8 @@
             celular: document.getElementById('field_tel').value,
             valor: document.getElementById('field_val').value,
             fecha: document.getElementById('field_date').value,
-            archivo_contenido: fileBase64, // El archivo real en base64
-            archivo_nombre: fileName      // El nombre para el adjunto
+            archivo_contenido: fileBase64,
+            archivo_nombre: fileName
         };
 
         btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
@@ -247,21 +268,23 @@
             });
 
             if (response.ok) {
-                alert("¡PAGO RECIBIDO! Los datos y el soporte se han enviado correctamente.");
+                alert("¡PAGOS RECIBIDOS! Los datos y el soporte se han enviado correctamente.");
                 form.reset();
-                document.getElementById('status').innerText = "ADJUNTAR SOPORTE DE PAGO";
+                document.getElementById('status').innerText = "ADJUNTAR SOPORTES (MÁX. 10)";
                 document.getElementById('status').style.color = "#ff6600";
+                document.getElementById('info-files').innerText = "JPG o PNG (Hasta 10 imágenes)";
             } else {
                 throw new Error();
             }
         } catch (error) {
-            alert("Error: No se pudo conectar con Power Automate. Verifica el flujo.");
+            alert("Error: No se pudo conectar con el sistema. Intenta de nuevo.");
         } finally {
             btn.innerText = "Enviar para Validación";
             btn.disabled = false;
         }
     };
 
+    // Bloqueo básico de inspección
     document.onkeydown = function(e) {
         if(event.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || (e.shiftKey && e.keyCode == 73)))) {
             return false;
