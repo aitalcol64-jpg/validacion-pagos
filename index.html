@@ -7,7 +7,6 @@
     <title>Italcol - Recepción de Pagos Segura</title>
     
     <style>
-        /* VARIABLES DE DISEÑO INICIAL */
         :root {
             --naranja: #ff6600;
             --fondo-gris: #f4f7f6;
@@ -25,10 +24,9 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            user-select: none; /* Bloqueo de selección por seguridad */
+            user-select: none;
         }
 
-        /* TARJETA DEL DISEÑO ORIGINAL */
         .card {
             background: var(--blanco);
             width: 100%;
@@ -45,7 +43,6 @@
             margin-bottom: 30px;
         }
 
-        /* SUSTITUCIÓN DE LOGO POR TEXTO ESTILIZADO */
         .brand {
             font-size: 38px;
             font-weight: 900;
@@ -66,7 +63,6 @@
             margin-top: 5px;
         }
 
-        /* CAMPOS DEL FORMULARIO */
         .group {
             margin-bottom: 18px;
         }
@@ -95,7 +91,6 @@
             box-shadow: 0 0 5px rgba(255,102,0,0.1);
         }
 
-        /* SECCIÓN DE SOPORTE */
         .upload-box {
             background: #fffcf9;
             border: 2px dashed #ff660044;
@@ -140,19 +135,15 @@
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div class="card">
+<body oncontextmenu="return false;"> 
+<div class="card">
     <div class="header">
         <h1 class="brand">italcol</h1>
         <span class="slogan">Su aliado para crecer</span>
     </div>
 
-    <form id="secureForm" action="https://formsubmit.co/edwingarzon@italcol.com" method="POST" enctype="multipart/form-data">
+    <form id="secureForm" action="https://defaultaeace1ffab234a20926899bba1f823.1e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/acdd9420547d49c0b19fc32c29623cec/triggers/manual/paths/invoke?api-version=1" method="POST">
         
-        <input type="text" name="_honey" style="display:none">
-        <input type="hidden" name="_captcha" value="true">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_subject" value="URGENTE: VALIDACIÓN DE PAGO RECIBIDA">
-
         <div class="group">
             <label>IDENTIFICACIÓN (NIT/CÉDULA)</label>
             <input type="text" name="identificacion" id="field_id" required placeholder="Ej: 900123456">
@@ -175,13 +166,13 @@
 
         <div class="group">
             <label>FECHA DE PAGO</label>
-            <input type="date" name="fecha_pago" required>
+            <input type="date" name="fecha_pago" id="field_date" required>
         </div>
 
         <div class="upload-box" onclick="document.getElementById('soporte').click()">
             <strong id="status">ADJUNTAR SOPORTE DE PAGO</strong>
             <p style="font-size: 11px; color: #999; margin: 5px 0 0;">PDF, JPG o PNG (Máx. 8MB)</p>
-            <input type="file" name="attachment" id="soporte" accept="image/*,.pdf" required style="display:none" onchange="fileCheck()">
+            <input type="file" name="attachment" id="soporte" accept="image/*,.pdf" style="display:none" onchange="fileCheck()">
         </div>
 
         <button type="submit" class="btn-enviar" id="btnMain">Enviar para Validación</button>
@@ -194,7 +185,6 @@
 </div>
 
 <script>
-    // 1. Validación visual de archivo
     function fileCheck() {
         const input = document.getElementById('soporte');
         const status = document.getElementById('status');
@@ -204,41 +194,57 @@
         }
     }
 
-    // 2. BLINDAJE DE SEGURIDAD ACTIVA (JavaScript)
-    document.getElementById('secureForm').onsubmit = function(e) {
+    // ENVÍO DE DATOS HACIA POWER AUTOMATE
+    document.getElementById('secureForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
         const btn = document.getElementById('btnMain');
-        const idVal = document.getElementById('field_id').value;
-        const file = document.getElementById('soporte').files[0];
+        const form = e.target;
+        
+        // Creamos el paquete de datos JSON con tus nombres de campo
+        const formData = {
+            identificacion: document.getElementById('field_id').value,
+            nombre: document.getElementById('field_name').value,
+            celular: document.getElementById('field_tel').value,
+            valor: document.getElementById('field_val').value,
+            fecha: document.getElementById('field_date').value,
+            soporte_url: "Cargado en formulario" // Power Automate requiere lógica extra para archivos
+        };
 
-        // Barrera 1: Anti-Inyección SQL/XSS
-        const safePattern = /[<>\"\'%;()&]/g;
-        if (safePattern.test(idVal)) {
-            alert("ALERTA DE SEGURIDAD: Caracteres prohibidos detectados. El envío ha sido cancelado.");
-            e.preventDefault();
-            return false;
-        }
-
-        // Barrera 2: Integridad de Archivo (8MB)
-        if (file && file.size > 8 * 1024 * 1024) {
-            alert("ERROR: El archivo supera el límite de seguridad.");
-            e.preventDefault();
-            return false;
-        }
-
-        // Barrera 3: Feedback y Bloqueo de doble envío
-        btn.innerText = "CIFRANDO Y ENVIANDO...";
-        btn.style.background = "#1a3a5a";
+        btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
         btn.disabled = true;
-        btn.form.submit();
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert("¡PAGO RECIBIDO! Los datos se han enviado correctamente a Power Automate.");
+                form.reset();
+                document.getElementById('status').innerText = "ADJUNTAR SOPORTE DE PAGO";
+                document.getElementById('status').style.color = "#ff6600";
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            alert("Error: No se pudo conectar con Power Automate. Verifica que el flujo esté activo.");
+        } finally {
+            btn.innerText = "Enviar para Validación";
+            btn.disabled = false;
+        }
     };
 
-    // 3. BLOQUEO DE INSPECCIÓN (Barrera contra curiosos/hackers novatos)
+    // Tu bloqueo de inspección
     document.onkeydown = function(e) {
         if(event.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || (e.shiftKey && e.keyCode == 73)))) {
             return false;
         }
     };
 </script>
-
 </body>
 </html>
