@@ -196,10 +196,9 @@
         const info = document.getElementById('info-files');
         
         if (input.files.length > 0) {
-            // CAMBIO: Validación de máximo 10 archivos
             if (input.files.length > 10) {
                 alert("Atención: Solo puedes subir un máximo de 10 imágenes.");
-                input.value = ""; // Limpiar selección
+                input.value = ""; 
                 status.innerText = "ADJUNTAR SOPORTES (MÁX. 10)";
                 status.style.color = "#ff6600";
             } else {
@@ -221,7 +220,6 @@
         e.preventDefault();
         
         const btn = document.getElementById('btnMain');
-        const form = e.target;
         const fileInput = document.getElementById('soporte');
         
         if (fileInput.files.length === 0) {
@@ -232,34 +230,31 @@
         btn.innerText = "PROCESANDO SOPORTES...";
         btn.disabled = true;
 
-        let fileBase64 = "";
-        let fileName = "";
-
-        // CAMBIO: Por ahora enviamos la PRIMERA imagen de la lista 
-        // para que sea compatible con tu flujo actual de Power Automate.
         try {
-            fileBase64 = await toBase64(fileInput.files[0]);
-            fileName = fileInput.files.length > 1 
-                ? "Lote_" + fileInput.files.length + "_" + fileInput.files[0].name 
-                : fileInput.files[0].name;
-        } catch (err) {
-            console.error("Error leyendo archivo", err);
-        }
+            // NUEVO: Procesa todos los archivos para enviarlos como lista
+            const promesasArchivos = Array.from(fileInput.files).map(async (file) => {
+                const base64 = await toBase64(file);
+                return {
+                    archivo_contenido: base64,
+                    archivo_nombre: file.name
+                };
+            });
 
-        const formData = {
-            identificacion: document.getElementById('field_id').value,
-            nombre: document.getElementById('field_name').value,
-            celular: document.getElementById('field_tel').value,
-            valor: document.getElementById('field_val').value,
-            fecha: document.getElementById('field_date').value,
-            archivo_contenido: fileBase64,
-            archivo_nombre: fileName
-        };
+            const listaSoportes = await Promise.all(promesasArchivos);
 
-        btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
+            // NUEVO: El formData ahora incluye la 'lista_soportes'
+            const formData = {
+                identificacion: document.getElementById('field_id').value,
+                nombre: document.getElementById('field_name').value,
+                celular: document.getElementById('field_tel').value,
+                valor: document.getElementById('field_val').value,
+                fecha: document.getElementById('field_date').value,
+                lista_soportes: listaSoportes
+            };
 
-        try {
-            const response = await fetch(form.action, {
+            btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
+
+            const response = await fetch(e.target.action, {
                 method: 'POST',
                 body: JSON.stringify(formData),
                 headers: {
@@ -268,8 +263,8 @@
             });
 
             if (response.ok) {
-                alert("¡PAGOS RECIBIDOS! Los datos y el soporte se han enviado correctamente.");
-                form.reset();
+                alert("¡PAGOS RECIBIDOS! Se han enviado " + listaSoportes.length + " soportes correctamente.");
+                e.target.reset();
                 document.getElementById('status').innerText = "ADJUNTAR SOPORTES (MÁX. 10)";
                 document.getElementById('status').style.color = "#ff6600";
                 document.getElementById('info-files').innerText = "JPG o PNG (Hasta 10 imágenes)";
@@ -284,7 +279,6 @@
         }
     };
 
-    // Bloqueo básico de inspección
     document.onkeydown = function(e) {
         if(event.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || (e.shiftKey && e.keyCode == 73)))) {
             return false;
