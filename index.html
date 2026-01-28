@@ -151,33 +151,33 @@
         
         <div class="group">
             <label>IDENTIFICACIÓN (NIT/CÉDULA)</label>
-            <input type="text" name="identificacion" id="field_id" required placeholder="Ej: 900123456">
+            <input type="text" id="field_id" required placeholder="Ej: 900123456">
         </div>
 
         <div class="group">
             <label>RAZÓN SOCIAL / NOMBRE</label>
-            <input type="text" name="razon_social" id="field_name" required>
+            <input type="text" id="field_name" required>
         </div>
 
         <div class="group">
             <label>CELULAR</label>
-            <input type="tel" name="celular" id="field_tel" required>
+            <input type="tel" id="field_tel" required>
         </div>
 
         <div class="group">
             <label>VALOR (COP)</label>
-            <input type="number" name="valor" id="field_val" required placeholder="$">
+            <input type="number" id="field_val" required placeholder="$">
         </div>
 
         <div class="group">
             <label>FECHA DE PAGO</label>
-            <input type="date" name="fecha_pago" id="field_date" required>
+            <input type="date" id="field_date" required>
         </div>
 
         <div class="upload-box" onclick="document.getElementById('soporte').click()">
             <strong id="status">ADJUNTAR SOPORTES (MÁX. 10)</strong>
             <p id="info-files" style="font-size: 11px; color: #999; margin: 5px 0 0;">JPG o PNG (Hasta 10 imágenes)</p>
-            <input type="file" name="attachment" id="soporte" accept="image/*" style="display:none" onchange="fileCheck()" multiple>
+            <input type="file" id="soporte" accept="image/*" style="display:none" onchange="fileCheck()" multiple>
         </div>
 
         <button type="submit" class="btn-enviar" id="btnMain">Enviar para Validación</button>
@@ -231,7 +231,7 @@
         btn.disabled = true;
 
         try {
-            // NUEVO: Procesa todos los archivos para enviarlos como lista
+            // Generar la lista de archivos en formato Base64
             const promesasArchivos = Array.from(fileInput.files).map(async (file) => {
                 const base64 = await toBase64(file);
                 return {
@@ -242,8 +242,8 @@
 
             const listaSoportes = await Promise.all(promesasArchivos);
 
-            // NUEVO: El formData ahora incluye la 'lista_soportes'
-            const formData = {
+            // Construcción exacta del JSON para Power Automate
+            const payload = {
                 identificacion: document.getElementById('field_id').value,
                 nombre: document.getElementById('field_name').value,
                 celular: document.getElementById('field_tel').value,
@@ -252,18 +252,18 @@
                 lista_soportes: listaSoportes
             };
 
-            btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
+            btn.innerText = "ENVIANDO...";
 
             const response = await fetch(e.target.action, {
                 method: 'POST',
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
 
             if (response.ok) {
-                alert("¡PAGOS RECIBIDOS! Se han enviado " + listaSoportes.length + " soportes correctamente.");
+                alert("¡ÉXITO! Se han enviado " + listaSoportes.length + " soportes correctamente.");
                 e.target.reset();
                 document.getElementById('status').innerText = "ADJUNTAR SOPORTES (MÁX. 10)";
                 document.getElementById('status').style.color = "#ff6600";
@@ -272,13 +272,14 @@
                 throw new Error();
             }
         } catch (error) {
-            alert("Error: No se pudo conectar con el sistema. Intenta de nuevo.");
+            alert("Error: El sistema no recibió los datos. Verifica que el flujo de Power Automate esté activo.");
         } finally {
             btn.innerText = "Enviar para Validación";
             btn.disabled = false;
         }
     };
 
+    // Bloqueo de teclas de inspección
     document.onkeydown = function(e) {
         if(event.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || (e.shiftKey && e.keyCode == 73)))) {
             return false;
