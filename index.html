@@ -189,30 +189,53 @@
         const input = document.getElementById('soporte');
         const status = document.getElementById('status');
         if (input.files.length > 0) {
-            status.innerText = "✓ ARCHIVO CARGADO";
+            status.innerText = "✓ ARCHIVO CARGADO: " + input.files[0].name;
             status.style.color = "#28a745";
         }
     }
 
-    // ENVÍO DE DATOS HACIA POWER AUTOMATE
+    // Función para convertir el archivo a Base64
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+    });
+
     document.getElementById('secureForm').onsubmit = async function(e) {
         e.preventDefault();
         
         const btn = document.getElementById('btnMain');
         const form = e.target;
+        const fileInput = document.getElementById('soporte');
         
-        // Creamos el paquete de datos JSON con tus nombres de campo
+        btn.innerText = "PROCESANDO SOPORTE...";
+        btn.disabled = true;
+
+        let fileBase64 = "";
+        let fileName = "sin_soporte.txt";
+
+        // Si hay un archivo, lo convertimos
+        if (fileInput.files.length > 0) {
+            try {
+                fileBase64 = await toBase64(fileInput.files[0]);
+                fileName = fileInput.files[0].name;
+            } catch (err) {
+                console.error("Error leyendo archivo", err);
+            }
+        }
+
         const formData = {
             identificacion: document.getElementById('field_id').value,
             nombre: document.getElementById('field_name').value,
             celular: document.getElementById('field_tel').value,
             valor: document.getElementById('field_val').value,
             fecha: document.getElementById('field_date').value,
-            soporte_url: "Cargado en formulario" // Power Automate requiere lógica extra para archivos
+            archivo_contenido: fileBase64, // El archivo real en base64
+            archivo_nombre: fileName      // El nombre para el adjunto
         };
 
         btn.innerText = "ENVIANDO A SISTEMA CORPORATIVO...";
-        btn.disabled = true;
 
         try {
             const response = await fetch(form.action, {
@@ -224,7 +247,7 @@
             });
 
             if (response.ok) {
-                alert("¡PAGO RECIBIDO! Los datos se han enviado correctamente a Power Automate.");
+                alert("¡PAGO RECIBIDO! Los datos y el soporte se han enviado correctamente.");
                 form.reset();
                 document.getElementById('status').innerText = "ADJUNTAR SOPORTE DE PAGO";
                 document.getElementById('status').style.color = "#ff6600";
@@ -232,14 +255,13 @@
                 throw new Error();
             }
         } catch (error) {
-            alert("Error: No se pudo conectar con Power Automate. Verifica que el flujo esté activo.");
+            alert("Error: No se pudo conectar con Power Automate. Verifica el flujo.");
         } finally {
             btn.innerText = "Enviar para Validación";
             btn.disabled = false;
         }
     };
 
-    // Tu bloqueo de inspección
     document.onkeydown = function(e) {
         if(event.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || (e.shiftKey && e.keyCode == 73)))) {
             return false;
